@@ -1,5 +1,6 @@
 package librarymanagement.controller;
 
+import jakarta.validation.Valid;
 import librarymanagement.dto.request.MemberRequest;
 import librarymanagement.dto.response.MemberResponse;
 import librarymanagement.service.MemberService;
@@ -18,7 +19,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<MemberResponse> create(@RequestBody MemberRequest request) {
+    public ResponseEntity<MemberResponse> create(@Valid @RequestBody MemberRequest request) {
         MemberResponse response = memberService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -38,6 +39,7 @@ public class MemberController {
     @PutMapping("/{id}")
     public ResponseEntity<MemberResponse> update(
             @PathVariable Long id,
+            @Valid
             @RequestBody MemberRequest request) {
 
         MemberResponse updatedMember = memberService.update(id, request);

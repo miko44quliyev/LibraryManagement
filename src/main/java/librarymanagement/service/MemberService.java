@@ -3,6 +3,7 @@ package librarymanagement.service;
 import librarymanagement.dto.request.MemberRequest;
 import librarymanagement.dto.response.MemberResponse;
 import librarymanagement.entity.Member;
+import librarymanagement.exception.ResourceNotFoundException;
 import librarymanagement.mapper.MemberMapper;
 import librarymanagement.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class MemberService {
     public MemberResponse getById(Long id) {
 
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
 
         return memberMapper.toResponse(member);
     }
@@ -40,7 +41,7 @@ public class MemberService {
     public MemberResponse update(Long id, MemberRequest request) {
 
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
 
         member.setFirstName(request.getFirstName());
         member.setLastName(request.getLastName());
@@ -56,7 +57,7 @@ public class MemberService {
     public void delete(Long id) {
 
         Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found"));
 
         memberRepository.delete(member);
     }

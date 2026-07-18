@@ -3,6 +3,7 @@ package librarymanagement.service;
 import librarymanagement.dto.request.AuthorRequest;
 import librarymanagement.dto.response.AuthorResponse;
 import librarymanagement.entity.Author;
+import librarymanagement.exception.ResourceNotFoundException;
 import librarymanagement.mapper.AuthorMapper;
 import librarymanagement.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,14 @@ public class AuthorService {
 
     public AuthorResponse getById(Long id) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() ->  new ResourceNotFoundException("Author not found"));
 
         return authorMapper.toResponse(author);
     }
 
     public AuthorResponse update(Long id, AuthorRequest request) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
 
         author.setFirstName(request.getFirstName());
         author.setLastName(request.getLastName());
@@ -49,7 +50,7 @@ public class AuthorService {
 
     public void delete(Long id) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
 
         authorRepository.delete(author);
     }

@@ -4,6 +4,7 @@ import librarymanagement.dto.request.BookRequest;
 import librarymanagement.dto.response.BookResponse;
 import librarymanagement.entity.Author;
 import librarymanagement.entity.Book;
+import librarymanagement.exception.ResourceNotFoundException;
 import librarymanagement.mapper.BookMapper;
 import librarymanagement.repository.AuthorRepository;
 import librarymanagement.repository.BookRepository;
@@ -23,7 +24,7 @@ public class BookService {
     public BookResponse create(BookRequest request) {
 
         Author author = authorRepository.findById(request.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
 
         Book book = bookMapper.toEntity(request);
         book.setAuthor(author);
@@ -40,7 +41,7 @@ public class BookService {
     public BookResponse getById(Long id) {
 
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         return bookMapper.toResponse(book);
     }
@@ -48,10 +49,10 @@ public class BookService {
     public BookResponse update(Long id, BookRequest request) {
 
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         Author author = authorRepository.findById(request.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
 
         book.setIsbn(request.getIsbn());
         book.setTitle(request.getTitle());
@@ -67,7 +68,7 @@ public class BookService {
     public void delete(Long id) {
 
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         bookRepository.delete(book);
     }

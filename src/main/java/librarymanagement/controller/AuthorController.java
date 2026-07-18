@@ -1,5 +1,6 @@
 package librarymanagement.controller;
 
+import jakarta.validation.Valid;
 import librarymanagement.dto.request.AuthorRequest;
 import librarymanagement.dto.response.AuthorResponse;
 import librarymanagement.service.AuthorService;
@@ -18,7 +19,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
-    public ResponseEntity<AuthorResponse> create(@RequestBody AuthorRequest request) {
+    public ResponseEntity<AuthorResponse> create(@Valid @RequestBody AuthorRequest request) {
         AuthorResponse response = authorService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -38,6 +39,7 @@ public class AuthorController {
     @PutMapping("/{id}")
     public ResponseEntity<AuthorResponse> update(
             @PathVariable Long id,
+            @Valid
             @RequestBody AuthorRequest request) {
 
         AuthorResponse updatedAuthor = authorService.update(id, request);

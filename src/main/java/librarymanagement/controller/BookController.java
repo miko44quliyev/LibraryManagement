@@ -1,5 +1,6 @@
 package librarymanagement.controller;
 
+import jakarta.validation.Valid;
 import librarymanagement.dto.request.BookRequest;
 import librarymanagement.dto.response.BookResponse;
 import librarymanagement.service.BookService;
@@ -18,7 +19,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<BookResponse> create(@RequestBody BookRequest request) {
+    public ResponseEntity<BookResponse> create(@Valid @RequestBody BookRequest request) {
         BookResponse response = bookService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -38,6 +39,7 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> update(
             @PathVariable Long id,
+            @Valid
             @RequestBody BookRequest request) {
 
         BookResponse updatedBook = bookService.update(id, request);
