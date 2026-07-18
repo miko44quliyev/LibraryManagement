@@ -5,11 +5,12 @@ import librarymanagement.dto.request.AuthorRequest;
 import librarymanagement.dto.response.AuthorResponse;
 import librarymanagement.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/authors")
@@ -25,9 +26,8 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AuthorResponse>> getAll() {
-        List<AuthorResponse> authors = authorService.getAll();
-        return ResponseEntity.ok(authors);
+    public ResponseEntity<Page<AuthorResponse>> getAll(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(authorService.getAll(pageable));
     }
 
     @GetMapping("/{id}")

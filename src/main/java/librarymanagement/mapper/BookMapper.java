@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BookMapper {
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "author", ignore = true)
     Book toEntity(BookRequest request);
 
@@ -19,7 +20,5 @@ public interface BookMapper {
     @Mapping(target = "authorName",
             expression = "java(book.getAuthor().getFirstName() + \" \" + book.getAuthor().getLastName())")
     BookResponse toResponse(Book book);
-
-    List<BookResponse> toResponseList(List<Book> books);
 
 }

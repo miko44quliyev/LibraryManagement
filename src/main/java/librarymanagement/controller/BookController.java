@@ -5,11 +5,12 @@ import librarymanagement.dto.request.BookRequest;
 import librarymanagement.dto.response.BookResponse;
 import librarymanagement.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/books")
@@ -25,9 +26,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponse>> getAll() {
-        List<BookResponse> books = bookService.getAll();
-        return ResponseEntity.ok(books);
+    public ResponseEntity<Page<BookResponse>> getAll(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(bookService.getAll(pageable));
     }
 
     @GetMapping("/{id}")

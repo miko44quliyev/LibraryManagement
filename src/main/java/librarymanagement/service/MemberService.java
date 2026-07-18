@@ -7,9 +7,9 @@ import librarymanagement.exception.ResourceNotFoundException;
 import librarymanagement.mapper.MemberMapper;
 import librarymanagement.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +26,8 @@ public class MemberService {
         return memberMapper.toResponse(savedMember);
     }
 
-    public List<MemberResponse> getAll() {
-        return memberMapper.toResponseList(memberRepository.findAll());
+    public Page<MemberResponse> getAll(Pageable pageable) {
+        return memberRepository.findAll(pageable).map(memberMapper::toResponse);
     }
 
     public MemberResponse getById(Long id) {

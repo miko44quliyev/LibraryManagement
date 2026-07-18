@@ -9,9 +9,9 @@ import librarymanagement.mapper.BookMapper;
 import librarymanagement.repository.AuthorRepository;
 import librarymanagement.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +34,8 @@ public class BookService {
         return bookMapper.toResponse(savedBook);
     }
 
-    public List<BookResponse> getAll() {
-        return bookMapper.toResponseList(bookRepository.findAll());
+    public Page<BookResponse> getAll(Pageable pageable) {
+        return bookRepository.findAll(pageable).map(bookMapper::toResponse);
     }
 
     public BookResponse getById(Long id) {

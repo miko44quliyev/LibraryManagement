@@ -7,9 +7,9 @@ import librarymanagement.exception.ResourceNotFoundException;
 import librarymanagement.mapper.AuthorMapper;
 import librarymanagement.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +24,8 @@ public class AuthorService {
         return authorMapper.toResponse(savedAuthor);
     }
 
-    public List<AuthorResponse> getAll() {
-        return authorMapper.toResponseList(authorRepository.findAll());
+    public Page<AuthorResponse> getAll(Pageable pageable) {
+        return authorRepository.findAll(pageable).map(authorMapper::toResponse);
     }
 
     public AuthorResponse getById(Long id) {

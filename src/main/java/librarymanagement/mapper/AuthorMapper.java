@@ -6,16 +6,13 @@ import librarymanagement.entity.Author;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface AuthorMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "books", ignore = true)
     Author toEntity(AuthorRequest request);
 
     AuthorResponse toResponse(Author author);
-
-    List<AuthorResponse> toResponseList(List<Author> authors);
 
 }

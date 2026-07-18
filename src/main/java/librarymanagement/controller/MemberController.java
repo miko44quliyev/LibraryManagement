@@ -5,11 +5,12 @@ import librarymanagement.dto.request.MemberRequest;
 import librarymanagement.dto.response.MemberResponse;
 import librarymanagement.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -25,9 +26,8 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MemberResponse>> getAll() {
-        List<MemberResponse> members = memberService.getAll();
-        return ResponseEntity.ok(members);
+    public ResponseEntity<Page<MemberResponse>> getAll(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(memberService.getAll(pageable));
     }
 
     @GetMapping("/{id}")
