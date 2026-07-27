@@ -18,19 +18,15 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Column(nullable = false, unique = true)
     private String isbn;
 
-    @NotBlank
     @Column(nullable = false)
     private String title;
 
-    @Positive
     @Column(nullable = false)
     private Integer publishedYear;
 
-    @Positive
     @Column(nullable = false)
     private Integer totalCopies;
 
