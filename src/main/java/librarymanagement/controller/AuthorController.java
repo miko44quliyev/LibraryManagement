@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create an author")
     public ResponseEntity<AuthorResponse> create(@Valid @RequestBody AuthorRequest request) {
         AuthorResponse response = authorService.create(request);
@@ -30,12 +32,14 @@ public class AuthorController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(summary = "List authors with pagination and sorting")
     public ResponseEntity<Page<AuthorResponse>> getAll(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
         return ResponseEntity.ok(authorService.getAll(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(summary = "Get an author by id")
     public ResponseEntity<AuthorResponse> getById(@PathVariable Long id) {
         AuthorResponse author = authorService.getById(id);
@@ -43,6 +47,7 @@ public class AuthorController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update an author")
     public ResponseEntity<AuthorResponse> update(
             @PathVariable Long id,
@@ -52,8 +57,8 @@ public class AuthorController {
         AuthorResponse updatedAuthor = authorService.update(id, request);
         return ResponseEntity.ok(updatedAuthor);
     }
-
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete an author")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         authorService.delete(id);

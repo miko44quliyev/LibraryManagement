@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a book")
     public ResponseEntity<BookResponse> create(@Valid @RequestBody BookRequest request) {
         BookResponse response = bookService.create(request);
@@ -30,6 +32,7 @@ public class BookController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(summary = "List books with pagination and sorting")
     public ResponseEntity<Page<BookResponse>> getAll(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
         return ResponseEntity.ok(bookService.getAll(pageable));
@@ -37,12 +40,14 @@ public class BookController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a book by id")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<BookResponse> getById(@PathVariable Long id) {
         BookResponse book = bookService.getById(id);
         return ResponseEntity.ok(book);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update a book")
     public ResponseEntity<BookResponse> update(
             @PathVariable Long id,
@@ -54,6 +59,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete a book")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);

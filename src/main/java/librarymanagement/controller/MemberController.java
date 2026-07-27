@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a member")
     public ResponseEntity<MemberResponse> create(@Valid @RequestBody MemberRequest request) {
         MemberResponse response = memberService.create(request);
@@ -30,12 +32,14 @@ public class MemberController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "List members with pagination and sorting")
     public ResponseEntity<Page<MemberResponse>> getAll(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
         return ResponseEntity.ok(memberService.getAll(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get a member by id")
     public ResponseEntity<MemberResponse> getById(@PathVariable Long id) {
         MemberResponse member = memberService.getById(id);
@@ -43,6 +47,7 @@ public class MemberController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update a member")
     public ResponseEntity<MemberResponse> update(
             @PathVariable Long id,
@@ -54,6 +59,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete a member")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         memberService.delete(id);
