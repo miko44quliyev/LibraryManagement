@@ -3,6 +3,8 @@ package librarymanagement.dto.response;
 import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,5 +20,6 @@ public class AuthorResponse {
     private String lastName;
     @Schema(example = "jane.austen@example.com")
     private String email;
+    private List<BookResponse> books;
 
 }
