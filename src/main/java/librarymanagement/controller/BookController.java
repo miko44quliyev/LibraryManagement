@@ -37,6 +37,28 @@ public class BookController {
     public ResponseEntity<Page<BookResponse>> getAll(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
         return ResponseEntity.ok(bookService.getAll(pageable));
     }
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @Operation(summary = "Search books")
+    public ResponseEntity<Page<BookResponse>> searchBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String isbn,
+            @RequestParam(required = false) Long authorId,
+            @RequestParam(required = false) Integer startYear,
+            @RequestParam(required = false) Integer endYear,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+
+        return ResponseEntity.ok(
+                bookService.searchBooks(
+                        title,
+                        isbn,
+                        authorId,
+                        startYear,
+                        endYear,
+                        pageable
+                )
+        );
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a book by id")

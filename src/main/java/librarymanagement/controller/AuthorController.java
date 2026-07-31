@@ -38,6 +38,20 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.getAll(pageable));
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @Operation(summary = "Search authors by first name, last name, and email")
+    public ResponseEntity<Page<AuthorResponse>> searchAuthors(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String email,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+
+        return ResponseEntity.ok(
+                authorService.searchAuthors(firstName, lastName, email, pageable)
+        );
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(summary = "Get an author by id")

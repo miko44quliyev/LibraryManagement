@@ -1,5 +1,6 @@
 package librarymanagement.service;
 
+import jakarta.transaction.Transactional;
 import librarymanagement.dto.request.AuthorRequest;
 import librarymanagement.dto.response.AuthorResponse;
 import librarymanagement.entity.Author;
@@ -17,7 +18,7 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
-
+    @Transactional
     public AuthorResponse create(AuthorRequest request) {
         Author author = authorMapper.toEntity(request);
         Author savedAuthor = authorRepository.save(author);
@@ -28,13 +29,27 @@ public class AuthorService {
         return authorRepository.findAll(pageable).map(authorMapper::toResponse);
     }
 
+    public Page<AuthorResponse> searchAuthors(
+            String firstName,
+            String lastName,
+            String email,
+            Pageable pageable) {
+
+        return authorRepository.searchAuthors(
+                firstName,
+                lastName,
+                email,
+                pageable
+        ).map(authorMapper::toResponse);
+    }
+
     public AuthorResponse getById(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() ->  new ResourceNotFoundException("Author not found"));
 
         return authorMapper.toResponse(author);
     }
-
+    @Transactional
     public AuthorResponse update(Long id, AuthorRequest request) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
@@ -48,6 +63,7 @@ public class AuthorService {
         return authorMapper.toResponse(updatedAuthor);
     }
 
+    @Transactional
     public void delete(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
