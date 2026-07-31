@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "books")
 @Getter
@@ -35,4 +38,25 @@ public class Book {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Author author;
+
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "book",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Loan> loans = new ArrayList<>();
+
+    public void addLoan(Loan loan) {
+        loans.add(loan);
+        loan.setBook(this);
+    }
+
+    public void removeLoan(Loan loan) {
+        loans.remove(loan);
+        loan.setBook(null);
+    }
 }
